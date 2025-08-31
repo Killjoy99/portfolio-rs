@@ -20,8 +20,6 @@ async fn main() -> Result<()> {
         App::new()
             .app_data(Data::new(tera.clone()))
             .service(handlers::index)
-            .service(handlers::projects)
-            .service(handlers::contact)
             .service(Files::new("/static", "static").show_files_listing())
     })
     .bind("0.0.0.0:80")?
