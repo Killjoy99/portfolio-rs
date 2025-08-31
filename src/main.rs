@@ -13,7 +13,7 @@ async fn main() -> Result<()> {
     }
     env_logger::init();
 
-    println!("Starting server at http://localhost:8080");
+    println!("Starting server at http://0.0.0.0:80");
     let tera = Tera::new("templates/**/*").unwrap();
 
     HttpServer::new(move || {
@@ -24,7 +24,7 @@ async fn main() -> Result<()> {
             .service(handlers::contact)
             .service(Files::new("/static", "static").show_files_listing())
     })
-    .bind("127.0.0.1:8080")?
+    .bind("0.0.0.0:80")?
     .run()
     .await
 }
