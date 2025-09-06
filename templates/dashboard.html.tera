@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Message Dashboard</title>
+    <style>
+        body { font-family: sans-serif; margin: 2rem; }
+        .message { border: 1px solid #ccc; padding: 1rem; margin-bottom: 1rem; border-radius: 5px; }
+        .meta { color: #666; font-size: 0.9rem; margin-bottom: 0.5rem; }
+    </style>
+</head>
+<body>
+    <h1>Contact Form Submissions</h1>
+
+    {% for message in messages %}
+        <div class="message">
+            <div class="meta">
+                <strong>From:</strong> {{ message.name }} ({{ message.email }})<br>
+                <strong>At:</strong> {{ message.created_at }}
+            </div>
+            <p>{{ message.message }}</p>
+        </div>
+    {% else %}
+        <p>No messages yet.</p>
+    {% endfor %}
+</body>
+</html>

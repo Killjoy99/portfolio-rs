@@ -8,12 +8,11 @@ mod handlers;
 
 #[actix_web::main]
 async fn main() -> Result<()> {
-    unsafe  {
-    std::env::set_var("RUST_LOG", "actix_web=info");
-    }
-    env_logger::init();
+    // unsafe  {
+    // std::env::set_var("RUST_LOG", "actix_web=info");
+    // }
+    // env_logger::init();
 
-    println!("Starting server at http://0.0.0.0:80");
     let tera = Tera::new("templates/**/*").unwrap();
 
     HttpServer::new(move || {

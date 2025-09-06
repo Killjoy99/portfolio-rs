@@ -57,15 +57,92 @@ document.addEventListener('DOMContentLoaded', function() {
         observer.observe(el);
     });
 
-    // Form submission
-    const contactForm = document.querySelector('.contact-form');
+    const contactForm = document.getElementById('contactForm');
+    const submitButton = document.getElementById('submitButton');
+    const formStatus = document.getElementById('formStatus');
+    
     if (contactForm) {
-        contactForm.addEventListener('submit', function(e) {
+        contactForm.addEventListener('submit', async function(e) {
             e.preventDefault();
-            alert('Message sent! (This is a demo - form submission would be handled by Actix Web backend)');
-            this.reset();
+            
+            // Show loading state
+            submitButton.classList.add('btn-loading');
+            submitButton.disabled = true;
+            formStatus.className = 'form-status';
+            formStatus.textContent = '';
+            
+            // Get form data and convert to JSON
+            const formData = {
+                name: this.querySelector('[name="name"]').value,
+                email: this.querySelector('[name="email"]').value,
+                message: this.querySelector('[name="message"]').value
+            };
+            
+            // Basic validation
+            if (!formData.name || !formData.email || !formData.message) {
+                formStatus.textContent = 'Please fill in all fields.';
+                formStatus.className = 'form-status error';
+                submitButton.classList.remove('btn-loading');
+                submitButton.disabled = false;
+                return;
+            }
+
+            // Email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(formData.email)) {
+                formStatus.textContent = 'Please enter a valid email address.';
+                formStatus.className = 'form-status error';
+                submitButton.classList.remove('btn-loading');
+                submitButton.disabled = false;
+                return;
+            }
+            
+            try {
+                // Send to your Rust backend - UPDATED FOR JSON
+                const response = await fetch('/contact', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                if (response.ok) {
+                    // Success message
+                    formStatus.textContent = 'Thank you! Your message has been saved. I\'ll get back to you soon.';
+                    formStatus.className = 'form-status success';
+                    contactForm.reset();
+                    
+                    // Optional: Clear success message after 5 seconds
+                    setTimeout(() => {
+                        formStatus.textContent = '';
+                        formStatus.className = 'form-status';
+                    }, 5000);
+                    
+                } else {
+                    // Handle different HTTP error statuses
+                    const errorText = await response.text();
+                    throw new Error(`Server error: ${response.status} - ${errorText}`);
+                }
+            } catch (error) {
+                // Error message
+                formStatus.textContent = 'Failed to send message. Please try again later.';
+                formStatus.className = 'form-status error';
+                console.error('Form submission error:', error);
+                
+                // Optional: Clear error message after 5 seconds
+                setTimeout(() => {
+                    formStatus.textContent = '';
+                    formStatus.className = 'form-status';
+                }, 5000);
+            } finally {
+                // Remove loading state
+                submitButton.classList.remove('btn-loading');
+                submitButton.disabled = false;
+            }
         });
     }
+
 
     // Add typing effect to terminal
     const terminalContent = document.querySelector('.terminal-content');
