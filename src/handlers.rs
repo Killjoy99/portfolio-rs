@@ -1,21 +1,8 @@
-use actix_web::{get, post, web, HttpResponse};
-use serde::{Serialize, Deserialize};
+use actix_web::{get, web, HttpResponse};
+use serde::{Serialize};
 use tera::Tera;
-use sqlx::{SqlitePool};
-use chrono::{DateTime, Utc};
-use web::Data;
+
 // Remove the query! macro and use query instead
-use sqlx::{query};
-
-#[derive(Debug, Serialize, Deserialize, sqlx::FromRow)]
-struct ContactMessage {
-    id: i64,
-    name: String,
-    email: String,
-    message: String,
-    created_at: DateTime<Utc>, // Automatically set by the database
-}
-
 #[derive(Serialize)]
 struct PortfolioData {
     name: String,
@@ -35,70 +22,6 @@ struct Project {
     live_url: Option<String>,
 }
 
-#[derive(Deserialize)]
-struct ContactForm{
-    name: String,
-    email: String,
-    message: String,
-}
-
-// In your contact_form handler, use query with bind parameters
-#[post("/contact")]
-pub async fn contact_form(
-    form: web::Form<ContactForm>,
-    pool: Data<SqlitePool>,
-) -> HttpResponse {
-    // Use query() instead of query!() for runtime query preparation
-    let result = query(
-        "INSERT INTO contact_messages (name, email, message) VALUES (?, ?, ?)",
-    )
-    .bind(&form.name)
-    .bind(&form.email)
-    .bind(&form.message)
-    .execute(pool.get_ref())
-    .await;
-
-    match result {
-        Ok(_) => HttpResponse::Ok().body("Thank you for your message! I'll get back to you soon."),
-        Err(e) => {
-            eprintln!("Failed to save message to database: {}", e);
-            HttpResponse::InternalServerError().body("Failed to save your message. Please try again later.")
-        }
-    }
-}
-
-// In your dashboard handler, use query_as with manual binding
-#[get("/dashboard")]
-pub async fn dashboard(
-    pool: Data<SqlitePool>,
-    tmpl: Data<Tera>,
-) -> HttpResponse {
-    // Use query_as with explicit SQL
-    let result = sqlx::query_as::<_, ContactMessage>(
-        "SELECT id, name, email, message, created_at FROM contact_messages ORDER BY created_at DESC"
-    )
-    .fetch_all(pool.get_ref())
-    .await;
-
-    match result {
-        Ok(messages) => {
-            let mut ctx = tera::Context::new();
-            ctx.insert("messages", &messages);
-
-            match tmpl.render("dashboard.html.tera", &ctx) {
-                Ok(rendered) => HttpResponse::Ok().body(rendered),
-                Err(e) => {
-                    eprintln!("Template error: {}", e);
-                    HttpResponse::InternalServerError().body("Error rendering template")
-                }
-            }
-        }
-        Err(e) => {
-            eprintln!("Database error: {}", e);
-            HttpResponse::InternalServerError().body("Error fetching messages")
-        }
-    }
-}
 
 #[get("/")]
 pub async fn index(tmpl: web::Data<Tera>) -> HttpResponse {
