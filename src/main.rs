@@ -21,7 +21,7 @@ async fn main() -> Result<()> {
             .service(handlers::index)
             .service(Files::new("/static", "static").show_files_listing())
     })
-    .bind("127.0.0.1:8080")?
+    .bind("127.0.0.1:80")?
     .run()
     .await
 }
