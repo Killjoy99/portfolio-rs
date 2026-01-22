@@ -2,26 +2,79 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Message Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Messages Dashboard</title>
+    <link rel="stylesheet" href="/static/css/style.css">
     <style>
-        body { font-family: sans-serif; margin: 2rem; }
-        .message { border: 1px solid #ccc; padding: 1rem; margin-bottom: 1rem; border-radius: 5px; }
-        .meta { color: #666; font-size: 0.9rem; margin-bottom: 0.5rem; }
+        body {
+            background: #0a0a0a;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 { color: #00ff88; }
+        a { color: #00ff88; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 2px solid #333; padding-bottom: 20px; }
+        .stats { display: flex; gap: 30px; margin-bottom: 30px; }
+        .stat-card { background: rgba(255,255,255,0.05); padding: 20px 30px; border-radius: 10px; border: 1px solid #333; }
+        .stat-card h3 { color: #888; font-size: 0.9rem; margin: 0 0 10px 0; text-transform: uppercase; }
+        .stat-card .value { color: #00ff88; font-size: 2rem; font-weight: bold; margin: 0; }
+        table { width: 100%; border-collapse: collapse; background: rgba(255,255,255,0.02); border-radius: 10px; }
+        th, td { padding: 15px 20px; text-align: left; border-bottom: 1px solid #333; }
+        th { background: rgba(0,255,136,0.1); color: #00ff88; font-weight: 600; text-transform: uppercase; font-size: 0.85rem; }
+        tr:hover { background: rgba(255,255,255,0.02); }
+        .empty { text-align: center; padding: 60px 20px; color: #888; }
     </style>
 </head>
 <body>
-    <h1>Contact Form Submissions</h1>
-
-    {% for message in messages %}
-        <div class="message">
-            <div class="meta">
-                <strong>From:</strong> {{ message.name }} ({{ message.email }})<br>
-                <strong>At:</strong> {{ message.created_at }}
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1>Contact Messages</h1>
+                <a href="/">Back to Portfolio</a>
             </div>
-            <p>{{ message.message }}</p>
+            <a href="/logout" style="background: #ff4444; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 600;">Logout</a>
         </div>
-    {% else %}
-        <p>No messages yet.</p>
-    {% endfor %}
+        
+        <div class="stats">
+            <div class="stat-card">
+                <h3>Total Messages</h3>
+                <p class="value">{{ count }}</p>
+            </div>
+        </div>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Message</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for message in messages %}
+                <tr>
+                    <td>{{ message.id }}</td>
+                    <td>{{ message.name }}</td>
+                    <td><a href="mailto:{{ message.email }}">{{ message.email }}</a></td>
+                    <td>{{ message.message }}</td>
+                    <td>{{ message.created_at }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        
+        {% if count <= 0 %}
+            <div class="empty">
+                <h2>No messages yet</h2>
+                <p>Messages will appear here.</p>
+            </div>
+        {% endif %}
+    </div>
 </body>
 </html>
+

@@ -180,6 +180,19 @@
                 <span class="title-number">04</span>
                 GET IN TOUCH
             </h2>
+            
+            {% if success %}
+            <div class="form-status success" style="text-align: center; padding: 20px; margin-bottom: 30px; background: rgba(0, 255, 136, 0.1); border: 1px solid #00ff88; border-radius: 8px;">
+                <p style="color: #00ff88; margin: 0;">{{ success }}</p>
+            </div>
+            {% endif %}
+            
+            {% if error %}
+            <div class="form-status error" style="text-align: center; padding: 20px; margin-bottom: 30px; background: rgba(255, 0, 68, 0.1); border: 1px solid #ff0044; border-radius: 8px;">
+                <p style="color: #ff0044; margin: 0;">{{ error }}</p>
+            </div>
+            {% endif %}
+            
             <div class="contact-content">
                 <div class="contact-info">
                     <h3>LET'S BUILD THE FUTURE TOGETHER</h3>
@@ -187,7 +200,11 @@
                     <div class="contact-details">
                         <div class="contact-item">
                             <i class="fas fa-envelope"></i>
-                            <span>{{ portfolio.contact_email }}</span>
+                            <span>
+                                <a href="mailto:{{ portfolio.contact_email }}" class="email-link">
+                                    {{ portfolio.contact_email }}
+                                </a>
+                            </span>
                         </div>
                         <div class="contact-item">
                             <i class="fas fa-map-marker-alt"></i>
@@ -217,10 +234,10 @@
     <!-- Footer -->
     <footer class="futuristic-footer">
         <div class="footer-container">
-            <p>&copy; 2025 {{ portfolio.name }}. Built with ACTIX WEB & deployed on RENDER</p>
+            <p>&copy; 2025 {{ portfolio.name }}. Built with ACTIX WEB & deployed on DigitalOcean Droplet</p>
             <div class="footer-links">
                 <a href="https://github.com/Killjoy99"><i class="fab fa-github"></i></a>
-                <a href="#"><i class="fab fa-linkedin"></i></a>
+                <a href="https://linkedin.com/in/philani-dlamini-8721ab269"><i class="fab fa-linkedin"></i></a>
             </div>
         </div>
     </footer>
