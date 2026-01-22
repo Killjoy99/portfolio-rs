@@ -36,8 +36,6 @@ Environment="DOTENV=/var/www/portfolio-rs/.env"
 ExecStart=/var/www/portfolio-rs/philani-portfolio
 Restart=always
 RestartSec=5
-StandardOutput=syslog
-StandardError=syslog
 SyslogIdentifier=portfolio-rs
 
 [Install]
