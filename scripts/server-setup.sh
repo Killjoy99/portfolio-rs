@@ -17,12 +17,12 @@ apt install -y nginx certbot python3-certbot-nginx git curl
 
 # Create application directory
 echo "📁 Creating application directory..."
-mkdir -p /var/www/portfolio
-chown -R $USER:$USER /var/www/portfolio
+mkdir -p /var/www/portfolio-rs
+chown -R $USER:$USER /var/www/portfolio-rs
 
 # Create systemd service
 echo "⚙️  Creating systemd service..."
-cat > /etc/systemd/system/portfolio.service << 'EOF'
+cat > /etc/systemd/system/portfolio-rs.service << 'EOF'
 [Unit]
 Description=Philani Portfolio Rust Application
 After=network.target
@@ -31,21 +31,21 @@ After=network.target
 Type=simple
 User=www-data
 Group=www-data
-WorkingDirectory=/var/www/portfolio
-Environment="DOTENV=/var/www/portfolio/.env"
-ExecStart=/var/www/portfolio/philani-portfolio
+WorkingDirectory=/var/www/portfolio-rs
+Environment="DOTENV=/var/www/portfolio-rs/.env"
+ExecStart=/var/www/portfolio-rs/philani-portfolio
 Restart=always
 RestartSec=5
 StandardOutput=syslog
 StandardError=syslog
-SyslogIdentifier=portfolio
+SyslogIdentifier=portfolio-rs
 
 [Install]
 WantedBy=multi-user.target
 EOF
 
 echo "⚙️  Creating nginx configuration..."
-cat > /etc/nginx/sites-available/portfolio << 'EOF'
+cat > /etc/nginx/sites-available/portfolio-rs << 'EOF'
 server {
     listen 80;
     server_name portfolio.entweni.com www.portfolio.entweni.com;
@@ -70,7 +70,7 @@ server {
     gzip_types text/plain text/css text/xml text/javascript application/x-javascript application/xml application/javascript application/json;
 
     location /static/ {
-        alias /var/www/portfolio/static/;
+        alias /var/www/portfolio-rs/static/;
         expires 30d;
         add_header Cache-Control "public, immutable";
     }
@@ -90,7 +90,7 @@ server {
 EOF
 
 # Enable nginx site
-ln -sf /etc/nginx/sites-available/portfolio /etc/nginx/sites-enabled/
+ln -sf /etc/nginx/sites-available/portfolio-rs /etc/nginx/sites-enabled/
 rm -f /etc/nginx/sites-enabled/default
 nginx -t
 
@@ -108,7 +108,7 @@ echo ""
 echo "✅ Server setup complete!"
 echo ""
 echo "Next steps:"
-echo "1. Transfer your application files to /var/www/portfolio"
+echo "1. Transfer your application files to /var/www/portfolio-rs"
 echo "2. Create .env file with your configuration"
 echo "3. Start the app: sudo systemctl start portfolio"
 echo "4. Get SSL: sudo certbot --nginx -d portfolio.entweni.com"
