@@ -3,14 +3,14 @@ use actix_web::{web::{Data}, App, HttpServer};
 use actix_session::{SessionMiddleware, storage::CookieSessionStore};
 use actix_web::cookie::Key;
 use tera::Tera;
-use  std::io::{Result};
+use std::io::{Result};
 
 mod handlers;
 
 #[actix_web::main]
 async fn main() -> Result<()> {
     // Load environment variables from .env file
-    dotenv::dotenv().ok();
+    dotenvy::dotenv().ok();
     
     // Initialize database
     let db_pool = handlers::init_db()

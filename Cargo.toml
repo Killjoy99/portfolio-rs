@@ -1,5 +1,5 @@
 [package]
-name = "philani-portfolio"
+name = "portfolio-rs"
 version = "0.1.0"
 edition = "2024"
 
@@ -10,7 +10,7 @@ serde = { version = "1.0.219", features = ["derive"] }
 tera = {version = "1.20.0", default-features = false}
 sqlx = { version = "0.8.6", features = ["sqlite", "chrono", "runtime-tokio"] }
 chrono = "0.4.43"
-dotenv = "0.15.0"
-regex = "1.12.2"
-actix-session = { version = "0.9", features = ["cookie-session"] }
-rand = "0.8"
+dotenvy = "0.15.0"
+regex = "1.12.3"
+actix-session = { version = "0.11.0", features = ["cookie-session"] }
+rand = "0.9.2"
