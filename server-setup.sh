@@ -15,6 +15,14 @@ echo "📦 Installing system packages..."
 apt update
 apt install -y nginx certbot python3-certbot-nginx git curl ufw
 
+# ------------------------------
+# Stop the services if they are aleady running (for idempotency)
+# ------------------------------
+if systemctl is-active --quiet $SERVICE_NAME; then
+    echo "⚠️ Stopping existing $SERVICE_NAME service..."
+    systemctl stop $SERVICE_NAME
+fi
+
 # -----------------------------
 # 2. App directory
 # -----------------------------
