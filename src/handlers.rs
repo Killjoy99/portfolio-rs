@@ -62,7 +62,7 @@ pub async fn login_page(tmpl: web::Data<Tera>) -> HttpResponse {
     let ctx = tera::Context::new();
     
     match tmpl.render("login.html.tera", &ctx) {
-        Ok(rendered) => HttpResponse::Ok().body(rendered),
+        Ok(rendered) => HttpResponse::Ok().content_type("text/html; charset=utf-8").body(rendered),
         Err(e) => {
             eprintln!("Template error: {}", e);
             HttpResponse::InternalServerError().body("Error rendering login page")
@@ -90,7 +90,7 @@ pub async fn login(
         ctx.insert("error", "Invalid email or password");
         
         match tmpl.render("login.html.tera", &ctx) {
-            Ok(rendered) => HttpResponse::Ok().body(rendered),
+            Ok(rendered) => HttpResponse::Ok().content_type("text/html; charset=utf-8").body(rendered),
             Err(e) => {
                 eprintln!("Template error: {}", e);
                 HttpResponse::InternalServerError().body("Error rendering login page")
@@ -117,7 +117,7 @@ pub async fn index(tmpl: web::Data<Tera>) -> HttpResponse {
     ctx.insert("portfolio", &portfolio_data);
 
     match tmpl.render("index.html.tera", &ctx) {
-        Ok(rendered) => HttpResponse::Ok().body(rendered),
+        Ok(rendered) => HttpResponse::Ok().content_type("text/html; charset=utf-8").body(rendered),
         Err(_) => HttpResponse::InternalServerError().body("Error rendering template"),
     }
 }
@@ -151,7 +151,9 @@ pub async fn dashboard(tmpl: web::Data<Tera>, pool: web::Data<SqlitePool>, sessi
     ctx.insert("count", &messages.len());
     
     match tmpl.render("dashboard.html.tera", &ctx) {
-        Ok(rendered) => HttpResponse::Ok().body(rendered),
+        Ok(rendered) => HttpResponse::Ok()
+            .content_type("text/html; charset=utf-8")
+            .body(rendered),
         Err(e) => {
             eprintln!("Template error: {}", e);
             HttpResponse::InternalServerError().body("Error rendering dashboard")
@@ -187,7 +189,7 @@ pub async fn submit_contact(
         ctx.insert("error", "All fields are required");
         
         match tmpl.render("index.html.tera", &ctx) {
-            Ok(rendered) => HttpResponse::Ok().body(rendered),
+            Ok(rendered) => HttpResponse::Ok().content_type("text/html; charset=utf-8").body(rendered),
             Err(e) => {
                 eprintln!("Template error: {}", e);
                 HttpResponse::InternalServerError().body("Error rendering template")
@@ -199,7 +201,7 @@ pub async fn submit_contact(
         ctx.insert("error", "Invalid email address");
         
         match tmpl.render("index.html.tera", &ctx) {
-            Ok(rendered) => HttpResponse::Ok().body(rendered),
+            Ok(rendered) => HttpResponse::Ok().content_type("text/html; charset=utf-8").body(rendered),
             Err(e) => {
                 eprintln!("Template error: {}", e);
                 HttpResponse::InternalServerError().body("Error rendering template")
@@ -228,7 +230,7 @@ pub async fn submit_contact(
                 ctx.insert("error", "Failed to save your message. Please try again later.");
                 
                 match tmpl.render("index.html.tera", &ctx) {
-                    Ok(rendered) => HttpResponse::Ok().body(rendered),
+                    Ok(rendered) => HttpResponse::Ok().content_type("text/html; charset=utf-8").body(rendered),
                     Err(e) => {
                         eprintln!("Template error: {}", e);
                         HttpResponse::InternalServerError().body("Error rendering template")
