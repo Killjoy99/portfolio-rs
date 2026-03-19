@@ -120,7 +120,7 @@ ufw --force enable
 # 6. SSL with Certbot
 # -----------------------------
 echo "🔐 Obtaining SSL certificate..."
-certbot --nginx -d $DOMAIN -d www.$DOMAIN --non-interactive --agree-tos -m admin@$DOMAIN
+certbot --nginx -d $DOMAIN -d --non-interactive --agree-tos -m admin@$DOMAIN
 
 # -----------------------------
 # 7. Hardened HTTPS config
